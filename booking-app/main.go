@@ -2,5 +2,11 @@ package main
 import "fmt"
 
 func main(){
-	fmt.Print("Welcome to our Booking Application")
+	var conferenceName  = "Go Conference"
+	fmt.Println("Welcome to our",conferenceName,"Booking Application")
+	
+
+	
+	
+
 }
