@@ -5,23 +5,20 @@ import (
 	"strings"
 )
 
-func main(){
-	conferenceName  := "Go Conference"
+func main() {
+	conferenceName := "Go Conference"
 	const conferenceTickets int = 50
-	var remainingTickets  uint = 50
+	var remainingTickets uint = 50
 
-	fmt.Printf("conferenceName is of Type : %T\n",conferenceName)
-	fmt.Println("Welcome to our",conferenceName,"Booking Application")
-	fmt.Printf("We have total of %d tickets and %d are still available\n",conferenceTickets,remainingTickets)
+	greetUsers(conferenceName, remainingTickets, conferenceTickets)
 
 	bookings := []string{}
-
 	var fName string
 	var lName string
 	var email string
 	var userTickets uint
 
-	for{
+	for {
 		fmt.Printf("Enter your firstName : ")
 		fmt.Scan(&fName)
 		fmt.Print("Enter your lastName : ")
@@ -31,35 +28,45 @@ func main(){
 		fmt.Printf("Enter number of tickets : ")
 		fmt.Scan(&userTickets)
 
-		isValidName := len(fName) >= 2  && len(lName)>=2 
-		isValidEmail :=   strings.Contains(email,"@")
-		isValidTicketNumber := userTickets > 0 && userTickets<=remainingTickets
+		isValidName := len(fName) >= 2 && len(lName) >= 2
+		isValidEmail := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-		if isValidEmail && isValidName && isValidTicketNumber{
+		if isValidEmail && isValidName && isValidTicketNumber {
 			remainingTickets = remainingTickets - userTickets
 
-			bookings = append(bookings,fName+" "+lName)
+			bookings = append(bookings, fName+" "+lName)
 
-			fmt.Printf("%v",bookings)
-			fmt.Printf("Thank you %s for booking %d tickets. You will receive a confirmation email at %s\n",fName+" "+lName,userTickets,email)
-			fmt.Printf("%v tickets remaining for %v\n",remainingTickets,conferenceName)
+			fmt.Printf("%v", bookings)
+			fmt.Printf("Thank you %s for booking %d tickets. You will receive a confirmation email at %s\n", fName+" "+lName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
 			// to create an empty array slices of strings basically the dynamic Array
 			firstNames := []string{}
 
-			for _ , name := range bookings{
-				firstNames = append(firstNames,(strings.Fields(name))[0])
+			for _, name := range bookings {
+				firstNames = append(firstNames, (strings.Fields(name))[0])
 			}
 			if remainingTickets == 0 {
 				fmt.Printf("Our conference is booked out,Please come next Year")
 				break
-			}	
-		}else{
-			fmt.Printf("Your input is Invalid, Please try again")
-			// fmt.Printf("We only have %v tickets remaining ,so you can't book %v tickets\n",remainingTickets,userTickets)
+			}
+		} else {
+			if !isValidName {
+				fmt.Println("First name or Last name you have entered is too short")
+			}
+			if !isValidEmail {
+				fmt.Println("Email address you entered doesn't contain @ symbol")
+			}
+			if !isValidTicketNumber {
+				fmt.Println("Number of tickets you entered is Invalid")
+			}
+			fmt.Printf("Please try again\n")
 		}
-		
 	}
+}
 
-
+func greetUsers(conferenceName string, remainingTickets uint, conferenceTickets int) {
+	fmt.Printf("Welcome To %v\n booking application", conferenceName)
+	fmt.Printf("We have total of %d tickets and %d are still available\n", conferenceTickets, remainingTickets)
 }
