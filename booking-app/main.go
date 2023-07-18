@@ -31,31 +31,34 @@ func main(){
 		fmt.Printf("Enter number of tickets : ")
 		fmt.Scan(&userTickets)
 
-		if userTickets > remainingTickets{
-			fmt.Printf("We only have %v tickets remaining ,so you can't book %v tickets\n",remainingTickets,userTickets)
-			break
-		}
-		remainingTickets = remainingTickets - userTickets
-		bookings = append(bookings,fName+" "+lName)
+		isValidName := len(fName) >= 2  && len(lName)>=2 
+		isValidEmail :=   strings.Contains(email,"@")
+		isValidTicketNumber := userTickets > 0 && userTickets<=remainingTickets
 
-		fmt.Printf("%v",bookings)
-		fmt.Printf("Thank you %s for booking %d tickets. You will receive a confirmation email at %s\n",fName+" "+lName,userTickets,email)
-		fmt.Printf("%v tickets remaining for %v\n",remainingTickets,conferenceName)
+		if isValidEmail && isValidName && isValidTicketNumber{
+			remainingTickets = remainingTickets - userTickets
 
-		// to create an empty array slices of strings basically the dynamic Array
-		firstNames := []string{}
+			bookings = append(bookings,fName+" "+lName)
 
-		for _ , name := range bookings{
-			firstNames = append(firstNames,(strings.Fields(name))[0])
-		}
-		// fmt.Printf("%v",firstNames)
+			fmt.Printf("%v",bookings)
+			fmt.Printf("Thank you %s for booking %d tickets. You will receive a confirmation email at %s\n",fName+" "+lName,userTickets,email)
+			fmt.Printf("%v tickets remaining for %v\n",remainingTickets,conferenceName)
 
-		if remainingTickets == 0 {
-			fmt.Printf("Our conference is booked out,Please come next Year")
-			break
+			// to create an empty array slices of strings basically the dynamic Array
+			firstNames := []string{}
+
+			for _ , name := range bookings{
+				firstNames = append(firstNames,(strings.Fields(name))[0])
+			}
+			if remainingTickets == 0 {
+				fmt.Printf("Our conference is booked out,Please come next Year")
+				break
+			}	
+		}else{
+			fmt.Printf("Your input is Invalid, Please try again")
+			// fmt.Printf("We only have %v tickets remaining ,so you can't book %v tickets\n",remainingTickets,userTickets)
 		}
 		
-
 	}
 
 
