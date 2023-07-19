@@ -19,18 +19,9 @@ func main() {
 	var userTickets uint
 
 	for {
-		fmt.Printf("Enter your firstName : ")
-		fmt.Scan(&fName)
-		fmt.Print("Enter your lastName : ")
-		fmt.Scan(&lName)
-		fmt.Printf("Enter your email : ")
-		fmt.Scan(&email)
-		fmt.Printf("Enter number of tickets : ")
-		fmt.Scan(&userTickets)
+		fName, lName, email, userTickets = getUserInputs()
 
-		isValidName := len(fName) >= 2 && len(lName) >= 2
-		isValidEmail := strings.Contains(email, "@")
-		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
+		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(fName, lName, userTickets, int(remainingTickets), email)
 
 		if isValidEmail && isValidName && isValidTicketNumber {
 			remainingTickets = remainingTickets - userTickets
@@ -42,11 +33,9 @@ func main() {
 			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
 			// to create an empty array slices of strings basically the dynamic Array
-			firstNames := []string{}
+			var firstNames []string = getFirstNames(bookings)
+			fmt.Printf("The FirstNames of the peoples who have registered : %v\n", firstNames)
 
-			for _, name := range bookings {
-				firstNames = append(firstNames, (strings.Fields(name))[0])
-			}
 			if remainingTickets == 0 {
 				fmt.Printf("Our conference is booked out,Please come next Year")
 				break
@@ -67,6 +56,40 @@ func main() {
 }
 
 func greetUsers(conferenceName string, remainingTickets uint, conferenceTickets int) {
-	fmt.Printf("Welcome To %v\n booking application", conferenceName)
+	fmt.Printf("Welcome To %v booking application\n", conferenceName)
 	fmt.Printf("We have total of %d tickets and %d are still available\n", conferenceTickets, remainingTickets)
+}
+
+func getFirstNames(bookings []string) []string {
+	firstNames := []string{}
+	for _, names := range bookings {
+		firstNames = append(firstNames, (strings.Fields(names))[0])
+	}
+	return firstNames
+}
+
+func validateUserInput(firstName string, lastName string, userTickets uint, remainingTickets uint, email string) (bool, bool, bool) {
+	isValidName := len(firstName) >= 2 && len(lastName) >= 2
+	isValidEmail := strings.Contains(email, "@")
+	isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
+	return isValidName, isValidEmail, isValidTicketNumber
+}
+
+func getUserInputs() (string, string, string, uint) {
+	var fName string
+	var lName string
+	var email string
+	var userTickets uint
+
+	fmt.Printf("Enter your firstName : ")
+	fmt.Scan(&fName)
+	fmt.Print("Enter your lastName : ")
+	fmt.Scan(&lName)
+	fmt.Printf("Enter your email : ")
+	fmt.Scan(&email)
+	fmt.Printf("Enter number of tickets : ")
+	fmt.Scan(&userTickets)
+
+	return fName, lName, email, userTickets
+
 }
