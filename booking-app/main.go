@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
 )
 
 var conferenceName string = "Go Conference"
@@ -9,25 +11,27 @@ var conferenceName string = "Go Conference"
 const conferenceTickets int = 50
 
 var remainingTickets uint = 50
+
 // var bookings = []string{}   // slice of strings
 // var bookings = make([]map[string]string,0)  // slice of maps
 
-
 type UserData struct {
-	firstName string
-	lastName string
-	email string
+	firstName       string
+	lastName        string
+	email           string
 	numberOfTickets uint
 }
-var bookings = make([]UserData,0)
+
+var bookings = make([]UserData, 0)
 
 
+var waitGroup = sync.WaitGroup{}
 func main() {
 	//Greet the User
 	greetUsers()
 
 	//Taking input from the user and processing the inputs
-	for {
+
 		//User Inputs
 		fName, lName, email, userTickets := getUserInputs()
 		//Validating the UserInputs
@@ -36,7 +40,10 @@ func main() {
 		//if all the validations are true book the tickets requested by the user
 		if isValidEmail && isValidName && isValidTicketNumber {
 
+			
 			bookTickets(userTickets, fName, lName, email)
+			waitGroup.Add(1)
+			go sendTicket(userTickets, fName, lName, email)
 			// to create an empty array slices of strings basically the dynamic Array
 			// to extract the firstnames of the user registered for the conference for privacy purpose
 			// var firstNames []string = getFirstNames()
@@ -45,7 +52,7 @@ func main() {
 			//All the tickets are booked
 			if remainingTickets == 0 {
 				fmt.Printf("Our conference is booked out,Please come next Year")
-				break
+				// break
 			}
 		} else {
 			if !isValidName {
@@ -59,7 +66,8 @@ func main() {
 			}
 			fmt.Printf("Please try again\n")
 		}
-	}
+		waitGroup.Wait()
+	
 }
 
 func greetUsers() {
@@ -70,7 +78,7 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 	for _, names := range bookings {
-		firstNames = append(firstNames,names.firstName)
+		firstNames = append(firstNames, names.firstName)
 	}
 	return firstNames
 }
@@ -96,11 +104,10 @@ func getUserInputs() (string, string, string, uint) {
 func bookTickets(userTickets uint, fName string, lName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	
-	bookings := append(bookings,UserData{
-		firstName : fName,
-		lastName: lName,
-		email: email,
+	bookings := append(bookings, UserData{
+		firstName:       fName,
+		lastName:        lName,
+		email:           email,
 		numberOfTickets: userTickets,
 	})
 	fmt.Printf("%v", bookings)
@@ -109,10 +116,13 @@ func bookTickets(userTickets uint, fName string, lName string, email string) {
 }
 
 
-func sendTicket(userTickets uint,firstName string,lastName string,email string){
-	fmt.Println("********************************************")
-	var ticket = fmt.Sprint("%v tickets for %v %v",userTickets,firstName,lastName)
-	fmt.Printf("Sending ticket :\n %v \nto email address %v\n",ticket,email)
-	fmt.Println("********************************************")
-}	
 
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(10*time.Second)
+	fmt.Println("******************************")
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Printf("Sending ticket :\n%v\nto email address %v\n", ticket, email)
+	fmt.Println("******************************")
+	waitGroup.Done()
+}
