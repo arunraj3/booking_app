@@ -6,23 +6,22 @@ import (
 )
 
 var conferenceName string = "Go Conference"
+
 const conferenceTickets int = 50
+
 var remainingTickets uint = 50
 var bookings = []string{}
-
-
-
 
 func main() {
 	//Greet the User
 	greetUsers()
 
-	//Taking input from the user and processing the inputs 
+	//Taking input from the user and processing the inputs
 	for {
 		//User Inputs
 		fName, lName, email, userTickets := getUserInputs()
-		//Validating the UserInputs 
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(fName, lName, userTickets, email)
+		//Validating the UserInputs
+		isValidName, isValidEmail, isValidTicketNumber := ValidateUserInput(fName, lName, userTickets, email,remainingTickets)
 
 		//if all the validations are true book the tickets requested by the user
 		if isValidEmail && isValidName && isValidTicketNumber {
@@ -33,7 +32,7 @@ func main() {
 			var firstNames []string = getFirstNames()
 			fmt.Printf("The FirstNames of the peoples who have registered : %v\n", firstNames)
 
-			//All the tickets are booked 
+			//All the tickets are booked
 			if remainingTickets == 0 {
 				fmt.Printf("Our conference is booked out,Please come next Year")
 				break
@@ -53,15 +52,10 @@ func main() {
 	}
 }
 
-
-
-
 func greetUsers() {
 	fmt.Printf("Welcome To %v booking application\n", conferenceName)
 	fmt.Printf("We have total of %d tickets and %d are still available\n", conferenceTickets, remainingTickets)
 }
-
-
 
 func getFirstNames() []string {
 	firstNames := []string{}
@@ -69,15 +63,6 @@ func getFirstNames() []string {
 		firstNames = append(firstNames, (strings.Fields(names))[0])
 	}
 	return firstNames
-}
-
-
-
-func validateUserInput(firstName string, lastName string, userTickets uint, email string) (bool, bool, bool) {
-	isValidName := len(firstName) >= 2 && len(lastName) >= 2
-	isValidEmail := strings.Contains(email, "@")
-	isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
-	return isValidName, isValidEmail, isValidTicketNumber
 }
 
 func getUserInputs() (string, string, string, uint) {
@@ -98,7 +83,7 @@ func getUserInputs() (string, string, string, uint) {
 	return fName, lName, email, userTickets
 }
 
-func bookTickets( userTickets uint, fName string, lName string, email string) {
+func bookTickets(userTickets uint, fName string, lName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 	bookings = append(bookings, fName+" "+lName)
 	fmt.Printf("%v", bookings)
