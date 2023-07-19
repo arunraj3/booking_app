@@ -21,7 +21,7 @@ func main() {
 		//User Inputs
 		fName, lName, email, userTickets := getUserInputs()
 		//Validating the UserInputs
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(fName, lName, userTickets, email)
+		isValidName, isValidEmail, isValidTicketNumber := ValidateUserInput(fName, lName, userTickets, email,remainingTickets)
 
 		//if all the validations are true book the tickets requested by the user
 		if isValidEmail && isValidName && isValidTicketNumber {
